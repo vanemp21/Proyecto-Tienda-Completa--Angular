@@ -1,0 +1,11 @@
+.register-on{
+    font-size: 2rem;
+}
+button:disabled{
+    cursor:not-allowed;
+    background-color: rgb(174, 141, 71);
+}
+button:disabled:hover{
+    cursor:not-allowed;
+    background-color: rgb(174, 141, 71);
+}
