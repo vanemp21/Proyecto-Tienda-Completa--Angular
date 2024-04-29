@@ -1,0 +1,35 @@
+.error-image img{
+    margin-bottom: 20px;
+}
+.error-image{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.loading{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+   
+}
+.box {
+    height: 100px;
+    width: 100px;
+    border-radius: 50%;
+    border: 3px solid;
+    border-color: orange transparent;
+    animation: spin 1s infinite ease-out;
+
+  }
+  
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  

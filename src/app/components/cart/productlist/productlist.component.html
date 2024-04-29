@@ -1,0 +1,10 @@
+<div class="flex flex-wrap justify-center gap-8">
+<app-product *ngFor="let producto of producto" [item]="producto"/>
+<div *ngIf="!producto.length">
+    <div>
+      <div class="loading">
+        <div class="box"></div>
+      </div>
+    </div>
+  </div>
+</div>
