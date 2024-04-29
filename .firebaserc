@@ -1,0 +1,14 @@
+{
+  "projects": {
+    "default": "tienda-app-81e83"
+  },
+  "targets": {
+    "tienda-app-81e83": {
+      "hosting": {
+        "tienda2": [
+          "tienda-app-81e83"
+        ]
+      }
+    }
+  }
+}
