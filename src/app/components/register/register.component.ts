@@ -29,18 +29,10 @@ export class RegisterComponent implements OnInit{
         email: this.registerForm.value.email,
         password: this.registerForm.value.password,
       };
-  
       try {
-        // Registro del usuario
        this.registerService.registroAuth(registrarUsuario.email, registrarUsuario.password);
-        
-        // Obtener datos y registrar en la base de datos
-        // this.registerService.registroDB(registrarUsuario.email, false);
-        
-        console.log('Usuario registrado y datos guardados en la base de datos.');
       } catch (error) {
         console.error('Error durante el registro y/o guardado en la base de datos:', error);
-        // Maneja el error, por ejemplo, mostrando un mensaje al usuario
       }
     }
   }
