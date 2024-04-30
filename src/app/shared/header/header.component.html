@@ -28,8 +28,8 @@
         <a class="mr-5 hover:text-white" routerLink="register">Registro</a>
       </div>
       <div *ngIf="islogged">
-        <a class="mr-5 hover:text-white">Mi perfil</a>
-        <a class="mr-5 hover:text-white">Mis compras</a>
+        <a class="mr-5 hover:text-white " routerLink="profile">Mi perfil</a>
+        <a class="mr-5 hover:text-white" routerLink="my-shop">Mis compras</a>
         <a class="mr-5 hover:text-white"
           ><button (click)="logout()">Logout</button></a
         >

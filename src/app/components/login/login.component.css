@@ -12,12 +12,3 @@ button:hover, a:hover{
 a{
     background-color: theme('colors.primary')
 }
-.logout{
-    position: absolute;
-    top:45px;
-    right: 20px;
-}
-.is-online{
-    grid-template-columns: 0.2fr 0.2fr;
-    gap: 30px;
-}
