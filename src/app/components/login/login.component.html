@@ -1,3 +1,4 @@
+<div class="is-offline" *ngIf="!islogged">
 <form [formGroup]="updateForm" (ngSubmit)="onSubmit()">
 <section class="text-gray-400 bg-gray-900 body-font">
     <div class="container px-5 py-24 mx-auto flex flex-wrap items-center">
@@ -51,9 +52,17 @@
           </div>
       
         </div>
+        <div class="flex items-center justify-center">
+          <button class="px-4 py-2 border flex gap-2 border-slate-200 dark:border-slate-700 rounded-lg text-slate-700 dark:text-slate-200 hover:border-slate-400 dark:hover:border-slate-500 hover:text-slate-900 dark:hover:text-slate-300 hover:shadow transition duration-150">
+              <img class="w-6 h-6" src="https://www.svgrepo.com/show/475656/google-color.svg" loading="lazy" alt="google logo">
+              <span (click)="onSubmitGoogle()">Login con Google</span>
+          </button>
+      </div><br>
         <button [disabled]="updateForm.invalid" type="submit" class="text-white bg-primary border-0 py-2 px-8 focus:outline-none hover:bg-pink-600 rounded text-lg">Enviar</button>
         <p class="text-xs mt-3">Literally you probably haven't heard of them jean shorts.</p>
       </div>
     </div>
   </section>
 </form>
+</div>
+

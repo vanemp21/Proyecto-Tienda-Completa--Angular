@@ -19,7 +19,7 @@ export const appConfig: ApplicationConfig = {
     importProvidersFrom(provideAuth(()=>getAuth())),
     provideAnimations(), 
     provideToastr({
-      timeOut: 2000,
+      timeOut: 5000,
       positionClass: 'toast-bottom-right',
       preventDuplicates: true,
     }), 

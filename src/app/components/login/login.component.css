@@ -6,11 +6,18 @@ button:disabled:hover{
     cursor:not-allowed;
     background-color: theme('colors.disabled')
 }
-button:hover{
+button:hover, a:hover{
     background-color: theme('colors.hover')
+}
+a{
+    background-color: theme('colors.primary')
 }
 .logout{
     position: absolute;
     top:45px;
     right: 20px;
+}
+.is-online{
+    grid-template-columns: 0.2fr 0.2fr;
+    gap: 30px;
 }

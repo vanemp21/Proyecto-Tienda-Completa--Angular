@@ -19,7 +19,7 @@
     width: 100px;
     border-radius: 50%;
     border: 3px solid;
-    border-color: orange transparent;
+    border-color: theme('colors.primary');
     animation: spin 1s infinite ease-out;
 
   }

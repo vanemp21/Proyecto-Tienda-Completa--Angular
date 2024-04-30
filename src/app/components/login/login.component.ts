@@ -8,6 +8,7 @@ import {
 } from '@angular/forms';
 import { RegisterService } from '../../services/register.service';
 import { Login } from '../../models/login.model';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -19,20 +20,35 @@ import { Login } from '../../models/login.model';
 export class LoginComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
-    private register: RegisterService
+    private register: RegisterService,
+    private router:Router
+    
   ) {}
   updateForm!: FormGroup;
   user: Login = {
     email: '',
     password: '',
   };
+  google:boolean=false;
+  islogged:boolean=false;
   ngOnInit(): void {
     this.updateForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required]],
     });
+    this.register.isLogged$.subscribe(isLogged => {
+      this.islogged = isLogged; 
+      if(this.islogged){
+        this.router.navigate(['/']);
+      }
+    });
+
   }
 
+onSubmitGoogle(){
+this.google=true;
+  this.register.loginGoogle();
+}
   async onSubmit() {
     if (this.updateForm.valid) {
       const valorEmail: string = this.updateForm.get('email')!.value;
@@ -41,10 +57,13 @@ export class LoginComponent implements OnInit {
         email: valorEmail,
         password: valorPass,
       };
-
       this.register.userLogged(this.user);
     } else {
-      console.log('algo pasó porque no he entrado');
+      if(!this.google){
+        console.log('Ha ocurrido un error al iniciar sesión');
+      }
     }
   }
+
+
 }

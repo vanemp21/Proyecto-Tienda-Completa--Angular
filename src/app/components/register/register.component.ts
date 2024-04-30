@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { Register } from '../../models/register.model';
 import { RegisterService } from '../../services/register.service';
 import {  NgIf } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -12,13 +13,20 @@ import {  NgIf } from '@angular/common';
   styleUrl: './register.component.css'
 })
 export class RegisterComponent implements OnInit{
-  constructor( private formBuilder: FormBuilder, private registerService: RegisterService){}
+  constructor( private formBuilder: FormBuilder, private registerService: RegisterService, private router:Router){}
   registerForm!: FormGroup
+  islogged:boolean=false;
   ngOnInit(): void {
     this.registerForm = this.formBuilder.group({
       name: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
+    });
+    this.registerService.isLogged$.subscribe(isLogged => {
+      this.islogged = isLogged; 
+      if(this.islogged){
+        this.router.navigate(['/']);
+      }
     });
   }
 
