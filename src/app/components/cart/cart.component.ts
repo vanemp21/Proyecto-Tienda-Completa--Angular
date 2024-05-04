@@ -1,10 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ProductoService } from '../../services/product.service';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
 import { Producto } from '../../models/producto.model';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-cart',
@@ -22,9 +23,10 @@ renderGalery: Boolean=true;
   constructor(
     private route: ActivatedRoute,
     private productService: ProductoService,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private toastr: ToastrService,
   ) {}
-
+ 
   getStarRating(rate: number) {
     const roundedRate = Math.round(rate); 
     let stars = '';
@@ -54,4 +56,31 @@ renderGalery: Boolean=true;
   ngOnDestroy(): void {
     this.productoSub?.unsubscribe();
   }
+  products: any[] = [];
+  getId(id:number | undefined,name:string, price:number, image:string){
+// this.productService.getProducts(id, name, price, image)
+
+  }
+
+  agregarAlCarrito(id: number | undefined, name: string, price: number, image: string) {
+    const newProduct = { id, name, price, image };
+    this.products.push(newProduct);
+    // Llama a la función para actualizar el carrito en la base de datos con el nuevo producto
+    this.productService.updateCart(newProduct)
+      .then(() => {
+        this.toastr.success(
+          `Se ha añadido correctamente al carrito`,
+          'Producto añadido'
+        );
+    
+      })
+      .catch((error) => {
+        this.toastr.error(
+          `No se ha podido añadir al carrito`,
+          'Error al añadir'
+        );
+      });
+  }
+  
+
 }

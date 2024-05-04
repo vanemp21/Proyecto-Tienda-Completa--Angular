@@ -32,6 +32,7 @@ import { BehaviorSubject } from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
+
 export class RegisterService {
   constructor(
     private firebaseAuth: Auth,
@@ -55,11 +56,13 @@ isGoogle:boolean=false
       this.isLoggedSubject.next(true);
     }
   }
+tokens:string | undefined=''
   async registroAuth(email: string, password: string) {
     const auth = getAuth();
     createUserWithEmailAndPassword(auth, email, password)
       .then(async (userCredential) => {
         const user = userCredential.user;
+       
         sendEmailVerification(user)
           .then(() => {
             this.toastr.success(
@@ -71,8 +74,8 @@ isGoogle:boolean=false
           .catch(() => {
             this.toastr.error('Error al enviar el mensaje', 'Error');
           });
-        this.registroDB(email, password, false);
-        console.log('llego hasta aqui ' + email);
+        this.registroDB(email, password, false, user.uid);
+ 
         this.isLoggedSubject.next(true);
         return user;
       })
@@ -102,7 +105,7 @@ isGoogle:boolean=false
         return errorCode;
       });
   }
-  async registroDB(email: string, password: string, islogged: boolean) {
+  async registroDB(email: string, password: string, islogged: boolean, uid:string) {
     const correo = email;
     if (!islogged) {
       const loggedUp = collection(this.firestore, 'login');
@@ -111,6 +114,7 @@ isGoogle:boolean=false
           correo,
           password,
           logged: true,
+          uid
         });
       } catch (error) {
         console.log(error);
@@ -125,9 +129,8 @@ isGoogle:boolean=false
     let userlogged:string='';
     signInWithPopup(auth, provider)
       .then(async (result) => {
-        let userExist:string='';
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-        const token = credential?.accessToken;
+        // const credential = GoogleAuthProvider.credentialFromResult(result);
+        // const token = credential?.accessToken;
         const user = result.user;
         console.log(user.email)
         const db = getFirestore(this.app);
@@ -135,7 +138,7 @@ isGoogle:boolean=false
         const q = query(loginCollectionRef, where('correo', '==', user.email));
         const querySnapshot = await getDocs(q);
        if( querySnapshot.size<=0){
-        await this.registroDB(user.email!, 'googleaccount', false);
+        await this.registroDB(user.email!, 'googleaccount', false, user.uid);
        }
        querySnapshot.forEach((d) => {
         userlogged = d.id;

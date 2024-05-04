@@ -1,1 +1,37 @@
-<p>my-shop works!</p>
+<h2 class="mb-4 ml-14 font-bold text-xl text-gray-600">
+  Tu catálogo de compras en tu carrito.
+</h2>
+<div class="mx-auto max-w-screen-xl px-4 grid-cart">
+  <div *ngFor="let product of cartproducts">
+    <div
+      class="bg-white relative flex flex-col shadow-md rounded-xl overflow-hidden hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
+    >
+    <div
+    href="" (click)="deleteProductCart(product.id)"
+    class="hover:text-primary absolute z-30 top-2 right-0 mt-2 mr-3"
+  >
+  <svg viewBox="0 0 10 10" width="0.75em" height="0.75em" stroke="currentColor" stroke-width="2">
+    <line x1="1" y1="1" x2="9" y2="9" />
+    <line x1="9" y1="1" x2="1" y2="9" />
+  </svg>
+  </div>
+   <span class="z-20 absolute h-full w-full top-0 left-0">&nbsp;</span>
+      <div class="h-auto overflow-hidden">
+        <div class="h-44 overflow-hidden relative">
+          <img [src]="product.image" [alt]="product.name" />
+        </div>
+      </div>
+      <div class="bg-white py-4 px-3">
+        <h3 class="text-xs mb-2 font-medium">
+          {{ product.name }}
+        </h3>
+        <div class="flex items-center">
+          <p class="text-xs text-black-400">{{ product.price }}$</p>
+
+        </div>
+      </div>
+
+      <!-- Cierre del div que contiene el componente -->
+    </div>
+  </div>
+</div>
