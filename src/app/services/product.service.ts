@@ -1,6 +1,6 @@
 import { apiServer } from '../api-services/apiservice';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { Producto } from '../models/producto.model';
 
 import { initializeApp } from 'firebase/app';
@@ -20,7 +20,7 @@ import {
   getDoc,
   updateDoc,
 } from 'firebase/firestore';
-import { ToastrService } from 'ngx-toastr';
+ 
 
 @Injectable({
   providedIn: 'root',
@@ -40,6 +40,8 @@ export class ProductoService {
   app = initializeApp(environment);
   db = getFirestore(this.app);
   products: any[] = [];
+  private cartChangesSubject: Subject<void> = new Subject<void>();
+  cartChanges = this.cartChangesSubject.asObservable();
   getProducts(
     id: number | undefined,
     name: string,
@@ -94,6 +96,29 @@ export class ProductoService {
       console.log('No hay usuario logeado');
     }
   }
+  
+
+
+
+  async eliminarProductoDelCarrito(productId: number): Promise<void> {
+    const auth = getAuth();
+    const user = auth.currentUser;
+    if (user) {
+      const mail: string | null = user.email;
+      const cartCollectionRef = collection(this.db, 'cart');
+      const q = query(cartCollectionRef, where('mail', '==', mail));
+      const querySnapshot = await getDocs(q);
+      if (querySnapshot.size > 0) {
+        const doc = querySnapshot.docs[0];
+        const currentProducts = doc.data()['productsUser'] || [];
+        const updatedProducts = currentProducts.filter((product: any) => product.id !== productId);
+        await updateDoc(doc.ref, { productsUser: updatedProducts });
+        this.cartChangesSubject.next();
+
+      }
+    }
+  }
+  
   
 //   async getProductsDB(){
 //   const auth = getAuth();

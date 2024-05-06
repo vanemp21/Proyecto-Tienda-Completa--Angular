@@ -13,10 +13,14 @@ import { CommonModule } from '@angular/common';
 
 export class HeaderComponent implements OnInit {
   islogged:boolean=false;
+  email:string | null = ''
   constructor(private authService: RegisterService) {}
   ngOnInit(): void {
     this.authService.isLogged$.subscribe(isLogged => {
       this.islogged = isLogged; 
+    });
+    this.authService.userEmail$.subscribe((email: string | null) => {
+      this.email = email;
     });
   }
  async logout() {

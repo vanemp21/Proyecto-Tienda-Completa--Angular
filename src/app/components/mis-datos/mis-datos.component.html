@@ -1,0 +1,89 @@
+<form class="dataForm" [formGroup]="dataForm" (ngSubmit)="onSubmit()">
+  <section class="text-gray-400 bg-gray-900 body-font">
+    <div
+      class="flex flex-wrap dataUser bg-gray-800 bg-opacity-50 rounded-lg p-8 flex-col"
+    >
+      <div *ngIf="showData">
+        <p><span>Correo: </span>{{ showData.email }}</p>
+        <p><span>Nombre:</span> {{ showData.name }}</p>
+        <p><span>Apellidos:</span> {{ showData.secondName }}</p>
+        <p><span>Dirección de envío:</span> {{ showData.address1 }}</p>
+        <p><span>Dirección de facturación:</span> {{ showData.address2 }}</p>
+      </div>
+      <div *ngIf="!showData">
+      <h1>Todavía no sabemos nada de ti. ¡Rellena tus datos para conocerte!</h1></div>
+    </div>
+  </section>
+  <section class="text-gray-400 bg-gray-900 body-font">
+    <div class="">
+      <div class="bg-gray-800 bg-opacity-50 rounded-lg p-8 flex flex-col">
+        <h2 class="text-white text-lg font-medium title-font mb-5">
+          Rellena o actualiza tus datos
+        </h2>
+
+        <div class="relative mb-4">
+          <label for="full-name" class="leading-7 text-sm text-gray-400"
+            >Nombre</label
+          >
+          <input
+            formControlName="name"
+            type="text"
+            id="full-name"
+            name="full-name"
+            class="w-full bg-gray-600 bg-opacity-20 focus:bg-transparent focus:ring-2 focus:ring-pink-900 rounded border border-gray-600 focus:border-pink-500 text-base outline-none text-gray-100 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+          />
+        </div>
+
+        <div class="relative mb-4">
+          <label for="second-name" class="leading-7 text-sm text-gray-400"
+            >Apellidos</label
+          >
+          <input
+            formControlName="secondName"
+            type="text"
+            id="text"
+            name="text"
+            class="w-full bg-gray-600 bg-opacity-20 focus:bg-transparent focus:ring-2 focus:ring-pink-900 rounded border border-gray-600 focus:border-pink-500 text-base outline-none text-gray-100 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+          />
+        </div>
+
+        <div class="relative mb-4">
+          <label for="address" class="leading-7 text-sm text-gray-400"
+            >Dirección de envío</label
+          >
+          <input
+            formControlName="address1"
+            type="text"
+            id="adress"
+            name="adress"
+            class="w-full bg-gray-600 bg-opacity-20 focus:bg-transparent focus:ring-2 focus:ring-pink-900 rounded border border-gray-600 focus:border-pink-500 text-base outline-none text-gray-100 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+          />
+        </div>
+
+        <div class="relative mb-4">
+          <label for="address2" class="leading-7 text-sm text-gray-400"
+            >Dirección de facturación</label
+          >
+          <input
+            formControlName="address2"
+            type="text"
+            id="adress2"
+            name="adress2"
+            class="w-full bg-gray-600 bg-opacity-20 focus:bg-transparent focus:ring-2 focus:ring-pink-900 rounded border border-gray-600 focus:border-pink-500 text-base outline-none text-gray-100 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+          />
+        </div>
+
+        <button
+          [disabled]="dataForm.invalid"
+          type="submit"
+          class="text-white bg-pink-500 border-0 py-2 px-8 focus:outline-none hover:bg-pink-600 rounded text-lg"
+        >
+          Enviar
+        </button>
+        <p class="text-xs mt-3">
+          Todos tus datos son privados y no son compartidos con terceros
+        </p>
+      </div>
+    </div>
+  </section>
+</form>

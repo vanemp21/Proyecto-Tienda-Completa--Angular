@@ -10,6 +10,8 @@ import {
   signOut,
   GoogleAuthProvider,
   signInWithPopup,
+  User,
+  onAuthStateChanged,
 } from 'firebase/auth';
 import {
   addDoc,
@@ -27,12 +29,12 @@ import { Login } from '../models/login.model';
 import { initializeApp } from 'firebase/app';
 import { environment } from '../../environments/environment';
 import { Router } from '@angular/router';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { Usuario } from '../models/user.model';
 
 @Injectable({
   providedIn: 'root',
 })
-
 export class RegisterService {
   constructor(
     private firebaseAuth: Auth,
@@ -41,41 +43,51 @@ export class RegisterService {
     private router: Router
   ) {
     this.checkAuthState();
+    this.initAuthListener();
   }
-  mail: string = '';
+  username: string | null = '';
+  // mail: string = '';
   app = initializeApp(environment);
   db = getFirestore(this.app);
   user$ = user(this.firebaseAuth);
   currentUserSig = signal<Login | null | undefined>(undefined);
   private isLoggedSubject = new BehaviorSubject<boolean>(false);
   isLogged$ = this.isLoggedSubject.asObservable();
-isGoogle:boolean=false
+  private userEmailSubject: BehaviorSubject<string | null> =
+    new BehaviorSubject<string | null>(null);
+  userEmail$ = this.userEmailSubject.asObservable();
+  private userDataSubject: BehaviorSubject<Usuario | null> = new BehaviorSubject<Usuario | null>(null);
+  userData$: Observable<Usuario | null> = this.userDataSubject.asObservable();
+
+  isGoogle: boolean = false;
   private checkAuthState() {
     const user = localStorage.getItem('user');
     if (user) {
       this.isLoggedSubject.next(true);
     }
   }
-tokens:string | undefined=''
+  tokens: string | undefined = '';
   async registroAuth(email: string, password: string) {
     const auth = getAuth();
     createUserWithEmailAndPassword(auth, email, password)
       .then(async (userCredential) => {
         const user = userCredential.user;
-       
+
         sendEmailVerification(user)
           .then(() => {
             this.toastr.success(
               `Se ha enviado un correo de verificación a ${user.email}`,
               'Registro completado'
             );
+
             localStorage.setItem('user', 'authenticated');
           })
+
           .catch(() => {
             this.toastr.error('Error al enviar el mensaje', 'Error');
           });
         this.registroDB(email, password, false, user.uid);
- 
+
         this.isLoggedSubject.next(true);
         return user;
       })
@@ -105,7 +117,12 @@ tokens:string | undefined=''
         return errorCode;
       });
   }
-  async registroDB(email: string, password: string, islogged: boolean, uid:string) {
+  async registroDB(
+    email: string,
+    password: string,
+    islogged: boolean,
+    uid: string
+  ) {
     const correo = email;
     if (!islogged) {
       const loggedUp = collection(this.firestore, 'login');
@@ -114,7 +131,7 @@ tokens:string | undefined=''
           correo,
           password,
           logged: true,
-          uid
+          uid,
         });
       } catch (error) {
         console.log(error);
@@ -122,34 +139,38 @@ tokens:string | undefined=''
     }
   }
 
-
- loginGoogle() {
+  loginGoogle() {
     const provider = new GoogleAuthProvider();
     const auth = getAuth();
-    let userlogged:string='';
+    let userlogged: string = '';
     signInWithPopup(auth, provider)
       .then(async (result) => {
         // const credential = GoogleAuthProvider.credentialFromResult(result);
         // const token = credential?.accessToken;
         const user = result.user;
-        console.log(user.email)
+
         const db = getFirestore(this.app);
         const loginCollectionRef = collection(db, 'login');
         const q = query(loginCollectionRef, where('correo', '==', user.email));
         const querySnapshot = await getDocs(q);
-       if( querySnapshot.size<=0){
-        await this.registroDB(user.email!, 'googleaccount', false, user.uid);
-       }
-       querySnapshot.forEach((d) => {
-        userlogged = d.id;
-      });
-      const useRef = doc(db, `login/${userlogged}`);
-      updateDoc(useRef, {
-        logged: true,
-      })
+        if (querySnapshot.size <= 0) {
+          await this.registroDB(user.email!, 'googleaccount', false, user.uid);
+        }
+        querySnapshot.forEach((d) => {
+          userlogged = d.id;
+        });
+        const useRef = doc(db, `login/${userlogged}`);
+        updateDoc(useRef, {
+          logged: true,
+        });
         this.isLoggedSubject.next(true);
         localStorage.setItem('user', 'authenticated');
-        this.isGoogle=true;
+        this.isGoogle = true;
+
+        this.toastr.success(
+          `Has iniciado sesión, serás redirigido a la página principal`,
+          '¡Bienvenido!'
+        );
       })
       .catch((error) => {
         const errorCode = error.code;
@@ -180,12 +201,12 @@ tokens:string | undefined=''
       }).then(() => {
         signInWithEmailAndPassword(auth, user.email, user.password)
           .then((userCredential) => {
-            const username = userCredential.user.email;
             this.toastr.success(
               `Has iniciado sesión, serás redirigido a la página principal`,
               '¡Bienvenido!'
             );
             localStorage.setItem('user', 'authenticated');
+
             this.isLoggedSubject.next(true);
           })
           .catch((error: any) => {
@@ -219,13 +240,76 @@ tokens:string | undefined=''
         this.toastr.success(`Has cerrado sesión correctamente`, 'Deslogin');
         imlogged = true;
         this.isLoggedSubject.next(false);
-      }); 
-  
-      
+      });
     } catch (error) {
       console.error('Error al realizar la operación: ', error);
       imlogged = false;
     }
     return imlogged;
+  }
+
+  async setdataUser(user: Usuario) {
+    const logged = localStorage.getItem('user');
+    let userlogged = '';
+    const db = getFirestore(this.app);
+    const loginCollectionRef = collection(db, 'user-data');
+    const q = query(loginCollectionRef, where('email', '==', user.email));
+    const querySnapshot = await getDocs(q);
+    if (logged) {
+      if (querySnapshot.size > 0) {
+        querySnapshot.forEach((d) => {
+          userlogged = d.id;
+        });
+        const useRef = doc(db, `user-data/${userlogged}`);
+        updateDoc(useRef, {
+          address1: user.address1,
+          address2: user.address2,
+          name: user.name,
+          secondName: user.secondName,
+        });
+      } else {
+        try {
+          const docRef = await addDoc(loginCollectionRef, user);
+        } catch (error) {
+          console.log('Estoy en el error de añadir' + error);
+        }
+      }
+    } else {
+      console.log('No se ha podido actualizar');
+    }
+  }
+  async getdataUser(gmail: string | null): Promise<Usuario | null>  {
+    const db = getFirestore(this.app);
+    const loginCollectionRef = collection(db, 'user-data');
+    const q = query(loginCollectionRef, where('email', '==', gmail));
+    const querySnapshot = await getDocs(q);
+    if (querySnapshot.size > 0) {
+      const data = querySnapshot.docs[0].data(); 
+      const usuario: Usuario = {
+        email: data['email'],  
+        name: data['name'],
+        secondName: data['secondName'],
+        address1: data['address1'],
+        address2: data['address2'],
+      };
+      this.userDataSubject.next(usuario);
+      return usuario;
+    }else{
+      this.userDataSubject.next(null); 
+    }
+    return null;
+  }
+
+  
+  private initAuthListener() {
+    const auth = getAuth();
+    onAuthStateChanged(auth, (user: User | null) => {
+      if (user) {
+        this.userEmailSubject.next(user.email);
+
+      } else {
+        this.userEmailSubject.next(null);
+      }
+    });
   }
 }

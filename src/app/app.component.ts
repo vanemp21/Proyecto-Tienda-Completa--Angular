@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { HeaderComponent } from './shared/header/header.component';
 import { FooterComponent } from './shared/footer/footer.component';
 import { HomeComponent } from './components/home/home.component';
+import { RegisterService } from './services/register.service';
 
 @Component({
   selector: 'app-root',
@@ -11,6 +12,12 @@ import { HomeComponent } from './components/home/home.component';
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
-export class AppComponent {
-  title = 'tienda2';
+export class AppComponent implements OnInit {
+  constructor(private authService:RegisterService){}
+  email:string|null=''
+ngOnInit(): void {
+
+}
+
+
 }

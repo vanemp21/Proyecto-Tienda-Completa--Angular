@@ -5,3 +5,7 @@
 body{
     background-color: #111827;
 }
+app-my-shop{
+    display: flex;
+    justify-content: center;
+}

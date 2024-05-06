@@ -5,6 +5,7 @@ import { RegisterComponent } from './components/register/register.component';
 import { CartComponent } from './components/cart/cart.component';
 import { MyShopComponent } from './components/my-shop/my-shop.component';
 import { ProfileComponent } from './components/profile/profile.component';
+import { MisDatosComponent } from './components/mis-datos/mis-datos.component';
 
 export const routes: Routes = [
     {path: '', component: HomeComponent},
@@ -13,6 +14,7 @@ export const routes: Routes = [
     {path:'producto/:id', component: CartComponent},
     {path:'profile', component: ProfileComponent},
     {path:'my-shop', component: MyShopComponent},
+    {path:'my-data', component: MisDatosComponent},
     {path:'**', redirectTo:'/'},
    
 ];
