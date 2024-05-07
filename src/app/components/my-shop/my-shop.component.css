@@ -12,19 +12,29 @@ h1 {
 h2{
   color:white;
 }
+.testeando{
+  height: 248px;
+  width: 284px;
+}
 .grid-cart {
   display: grid;
   grid-template-columns: 0.9fr;
   grid-template-rows: 1fr;
   gap: 30px;
   justify-content: center;
-
 }
-.productCart {
-  max-height: 230px;
+.price{
+  color:white;
+  font-size: 36px;
+}
+.total{
+  margin-top:20px;
+  color:white;
+  font-size: 26px;
 }
 .deleteProduct {
   cursor: pointer;
+  border-radius: 5px;
 }
 @media screen and (min-width: 540px) {
   .grid-cart {

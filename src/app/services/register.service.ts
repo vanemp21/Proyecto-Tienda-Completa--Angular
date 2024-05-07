@@ -44,6 +44,7 @@ export class RegisterService {
   ) {
     this.checkAuthState();
     this.initAuthListener();
+ 
   }
   username: string | null = '';
   // mail: string = '';
@@ -267,9 +268,17 @@ export class RegisterService {
           name: user.name,
           secondName: user.secondName,
         });
+        this.toastr.success(
+          `Se ha actualizado correctamente tus datos`,
+          'Datos actualizados'
+        );
       } else {
         try {
           const docRef = await addDoc(loginCollectionRef, user);
+          this.toastr.success(
+            `Se ha añadido correctamente tus datos`,
+            'Datos añadidos'
+          );
         } catch (error) {
           console.log('Estoy en el error de añadir' + error);
         }
@@ -300,7 +309,7 @@ export class RegisterService {
     return null;
   }
 
-  
+
   private initAuthListener() {
     const auth = getAuth();
     onAuthStateChanged(auth, (user: User | null) => {

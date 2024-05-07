@@ -57,30 +57,28 @@ renderGalery: Boolean=true;
     this.productoSub?.unsubscribe();
   }
   products: any[] = [];
-  getId(id:number | undefined,name:string, price:number, image:string){
-// this.productService.getProducts(id, name, price, image)
 
-  }
 
   agregarAlCarrito(id: number | undefined, name: string, price: number, image: string) {
     const newProduct = { id, name, price, image };
     this.products.push(newProduct);
-    // Llama a la función para actualizar el carrito en la base de datos con el nuevo producto
     this.productService.updateCart(newProduct)
       .then(() => {
         this.toastr.success(
           `Se ha añadido correctamente al carrito`,
           'Producto añadido'
         );
-    
+     
       })
-      .catch((error) => {
+      .catch(() => {
         this.toastr.error(
           `No se ha podido añadir al carrito`,
           'Error al añadir'
         );
       });
   }
+ 
+
   
 
 }

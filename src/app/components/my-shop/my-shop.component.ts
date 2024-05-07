@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { RegisterService } from '../../services/register.service';
 import { ProductoService } from '../../services/product.service';
@@ -12,61 +12,75 @@ import { Subscription } from 'rxjs';
   templateUrl: './my-shop.component.html',
   styleUrl: './my-shop.component.css',
 })
-export class MyShopComponent implements OnInit, OnDestroy{
+export class MyShopComponent implements OnInit, OnDestroy {
   cartproducts: any[] = [];
   islogged: boolean = false;
   private cartSubscription: Subscription | undefined;
-
-
+  private totalSubscription: Subscription | undefined;
+  total: number=0;
   constructor(
     private register: RegisterService,
     private router: Router,
-    private productsServices: ProductoService
+    private productsServices: ProductoService,
+    private cdr: ChangeDetectorRef
   ) {}
 
-  // userEmail=this.register.getMail()
-  ngOnInit(): void {
+
+  async ngOnInit(): Promise<void> {
+    this.cartSubscription = this.productsServices.cartChanges.subscribe(() => {
+      this.actualizarProductosDelCarrito();
+    });
+
     this.register.isLogged$.subscribe((isLogged) => {
       this.islogged = isLogged;
       if (!this.islogged) {
         this.router.navigate(['/login']);
       }
     });
-    this.cartSubscription = this.productsServices.cartChanges.subscribe(() => {
-      this.actualizarProductosDelCarrito();
-    });
+  
+    // this.total=this.productsServices.obtenerTotal()
     this.actualizarProductosDelCarrito();
-
+    //ME QUEDE AQUÍ
+    // this.obtenerTotal()
+    this.totalSubscription = this.productsServices.total$.subscribe(total => {
+      this.total = total;
+    });
   }
-
+ async obtenerTotal(){
+  try {
+    this.total = await this.productsServices.obtenertotal();
+  } catch (error) {
+    console.error('Error al obtener el total:', error);
+  }
+}
  
   actualizarProductosDelCarrito() {
     this.productsServices
       .showIdProducts()
       .then((products) => {
         this.cartproducts = products;
-        
       })
       .catch((error) => {
         console.error('Error al obtener productos del carrito:', error);
       });
   }
 
-  deleteProductCart(id: number) {
-    this.productsServices.eliminarProductoDelCarrito(id)
+  deleteProductCart(index: number, id: number) {
+    this.productsServices
+      .eliminarProductoDelCarrito(index, id)
       .then(() => {
-        console.log('Producto eliminado del carrito y actualizado con éxito');
+        
       })
       .catch((error) => {
         console.error('Error al eliminar el producto del carrito:', error);
       });
   }
-
+  
   ngOnDestroy(): void {
     if (this.cartSubscription) {
       this.cartSubscription.unsubscribe();
     }
+    this.totalSubscription!.unsubscribe();
+ 
   }
-
 }
-
