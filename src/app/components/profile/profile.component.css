@@ -1,4 +1,32 @@
 .is-online{
-    grid-template-columns: 0.2fr 0.2fr;
+    grid-template-columns: 1fr  ;
     gap: 30px;
+    margin:10px 20px;
+ 
 }
+
+@media screen and (min-width:768px) {
+    .is-online{
+        grid-template-columns: 1fr 1fr;
+    }
+    
+}
+@media screen and (min-width:912px) {
+    .is-online{
+        grid-template-columns: 0.4fr 0.4fr;
+    }
+    
+}
+@media screen and (min-width:1200px) {
+    .is-online{
+        grid-template-columns: 0.3fr 0.3fr;
+    }
+    
+}
+@media screen and (min-width:1800px) {
+    .is-online{
+        grid-template-columns: 0.2fr 0.2fr;
+    }
+    
+}
+ 

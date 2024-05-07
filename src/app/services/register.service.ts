@@ -6,7 +6,6 @@ import {
   createUserWithEmailAndPassword,
   sendEmailVerification,
   signInWithEmailAndPassword,
-  updateProfile,
   signOut,
   GoogleAuthProvider,
   signInWithPopup,
@@ -44,10 +43,8 @@ export class RegisterService {
   ) {
     this.checkAuthState();
     this.initAuthListener();
- 
   }
   username: string | null = '';
-  // mail: string = '';
   app = initializeApp(environment);
   db = getFirestore(this.app);
   user$ = user(this.firebaseAuth);
@@ -57,7 +54,8 @@ export class RegisterService {
   private userEmailSubject: BehaviorSubject<string | null> =
     new BehaviorSubject<string | null>(null);
   userEmail$ = this.userEmailSubject.asObservable();
-  private userDataSubject: BehaviorSubject<Usuario | null> = new BehaviorSubject<Usuario | null>(null);
+  private userDataSubject: BehaviorSubject<Usuario | null> =
+    new BehaviorSubject<Usuario | null>(null);
   userData$: Observable<Usuario | null> = this.userDataSubject.asObservable();
 
   isGoogle: boolean = false;
@@ -80,15 +78,12 @@ export class RegisterService {
               `Se ha enviado un correo de verificación a ${user.email}`,
               'Registro completado'
             );
-
             localStorage.setItem('user', 'authenticated');
           })
-
           .catch(() => {
             this.toastr.error('Error al enviar el mensaje', 'Error');
           });
         this.registroDB(email, password, false, user.uid);
-
         this.isLoggedSubject.next(true);
         return user;
       })
@@ -98,7 +93,6 @@ export class RegisterService {
         switch (error.code) {
           case 'auth/email-already-in-use':
             errormessage = `El correo ${email} ya está en uso.`;
-
             break;
           case 'auth/invalid-email':
             errormessage = `El correo ${email} es inválido.`;
@@ -146,10 +140,7 @@ export class RegisterService {
     let userlogged: string = '';
     signInWithPopup(auth, provider)
       .then(async (result) => {
-        // const credential = GoogleAuthProvider.credentialFromResult(result);
-        // const token = credential?.accessToken;
         const user = result.user;
-
         const db = getFirestore(this.app);
         const loginCollectionRef = collection(db, 'login');
         const q = query(loginCollectionRef, where('correo', '==', user.email));
@@ -287,15 +278,15 @@ export class RegisterService {
       console.log('No se ha podido actualizar');
     }
   }
-  async getdataUser(gmail: string | null): Promise<Usuario | null>  {
+  async getdataUser(gmail: string | null): Promise<Usuario | null> {
     const db = getFirestore(this.app);
     const loginCollectionRef = collection(db, 'user-data');
     const q = query(loginCollectionRef, where('email', '==', gmail));
     const querySnapshot = await getDocs(q);
     if (querySnapshot.size > 0) {
-      const data = querySnapshot.docs[0].data(); 
+      const data = querySnapshot.docs[0].data();
       const usuario: Usuario = {
-        email: data['email'],  
+        email: data['email'],
         name: data['name'],
         secondName: data['secondName'],
         address1: data['address1'],
@@ -303,19 +294,17 @@ export class RegisterService {
       };
       this.userDataSubject.next(usuario);
       return usuario;
-    }else{
-      this.userDataSubject.next(null); 
+    } else {
+      this.userDataSubject.next(null);
     }
     return null;
   }
-
 
   private initAuthListener() {
     const auth = getAuth();
     onAuthStateChanged(auth, (user: User | null) => {
       if (user) {
         this.userEmailSubject.next(user.email);
-
       } else {
         this.userEmailSubject.next(null);
       }

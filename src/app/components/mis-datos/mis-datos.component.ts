@@ -28,14 +28,13 @@ export class MisDatosComponent implements OnInit {
   };
   showData: Usuario | null = null;
   email: string | null = '';
-  islogged:boolean=false;
+  islogged: boolean = false;
   constructor(
     private formBuilder: FormBuilder,
     private authService: RegisterService,
-    private router:Router
+    private router: Router
   ) {}
-   ngOnInit() {
-    
+  ngOnInit() {
     this.dataForm = this.formBuilder.group({
       name: ['', [Validators.required]],
       secondName: ['', [Validators.required]],
@@ -47,13 +46,12 @@ export class MisDatosComponent implements OnInit {
       this.email = email;
       this.loadData();
     });
-    this.authService.isLogged$.subscribe(isLogged => {
-      this.islogged = isLogged; 
-      if(!this.islogged){
+    this.authService.isLogged$.subscribe((isLogged) => {
+      this.islogged = isLogged;
+      if (!this.islogged) {
         this.router.navigate(['/']);
       }
     });
-
   }
   async loadData() {
     if (this.email) {
@@ -76,8 +74,5 @@ export class MisDatosComponent implements OnInit {
       await this.authService.setdataUser(this.user);
       this.showData = this.user;
     }
-       
- 
   }
-
 }

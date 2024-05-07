@@ -8,12 +8,15 @@ import { ProductoService } from '../../../services/product.service';
 @Component({
   selector: 'app-product',
   standalone: true,
-  imports: [CommonModule,RouterLink],
+  imports: [CommonModule, RouterLink],
   templateUrl: './product.component.html',
   styleUrl: './product.component.css',
 })
 export class ProductComponent {
-  constructor(private sanitizer: DomSanitizer,productoService:ProductoService) {}
+  constructor(
+    private sanitizer: DomSanitizer,
+    productoService: ProductoService
+  ) {}
   @Input() item: Producto | undefined;
 
   getImageUrl(imageUrl: string): SafeUrl {
@@ -32,5 +35,4 @@ export class ProductComponent {
     }
     return stars;
   }
-
 }

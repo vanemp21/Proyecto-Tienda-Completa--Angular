@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { RegisterService } from '../../services/register.service';
 import { ProductoService } from '../../services/product.service';
@@ -17,43 +17,38 @@ export class MyShopComponent implements OnInit, OnDestroy {
   islogged: boolean = false;
   private cartSubscription: Subscription | undefined;
   private totalSubscription: Subscription | undefined;
-  total: number=0;
+  total: number = 0;
   constructor(
     private register: RegisterService,
     private router: Router,
     private productsServices: ProductoService,
-    private cdr: ChangeDetectorRef
+ 
   ) {}
-
 
   async ngOnInit(): Promise<void> {
     this.cartSubscription = this.productsServices.cartChanges.subscribe(() => {
       this.actualizarProductosDelCarrito();
     });
-
     this.register.isLogged$.subscribe((isLogged) => {
       this.islogged = isLogged;
       if (!this.islogged) {
         this.router.navigate(['/login']);
       }
     });
-  
-    // this.total=this.productsServices.obtenerTotal()
     this.actualizarProductosDelCarrito();
-    //ME QUEDE AQUÍ
-    // this.obtenerTotal()
-    this.totalSubscription = this.productsServices.total$.subscribe(total => {
-      this.total = total;
+    this.totalSubscription = this.productsServices.total$.subscribe((total) => {
+      this.total = Math.round(total * 100) / 100;
+
     });
   }
- async obtenerTotal(){
-  try {
-    this.total = await this.productsServices.obtenertotal();
-  } catch (error) {
-    console.error('Error al obtener el total:', error);
+  async obtenerTotal() {
+    try {
+      this.total = await this.productsServices.obtenertotal();
+    } catch (error) {
+      console.error('Error al obtener el total:', error);
+    }
   }
-}
- 
+
   actualizarProductosDelCarrito() {
     this.productsServices
       .showIdProducts()
@@ -68,19 +63,16 @@ export class MyShopComponent implements OnInit, OnDestroy {
   deleteProductCart(index: number, id: number) {
     this.productsServices
       .eliminarProductoDelCarrito(index, id)
-      .then(() => {
-        
-      })
+      .then(() => {})
       .catch((error) => {
         console.error('Error al eliminar el producto del carrito:', error);
       });
   }
-  
+
   ngOnDestroy(): void {
     if (this.cartSubscription) {
       this.cartSubscription.unsubscribe();
     }
     this.totalSubscription!.unsubscribe();
- 
   }
 }

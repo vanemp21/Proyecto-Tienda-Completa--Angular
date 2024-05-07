@@ -5,19 +5,17 @@ import { Producto } from '../models/producto.model';
 import { ToastrService } from 'ngx-toastr';
 import { initializeApp } from 'firebase/app';
 import { environment } from '../../environments/environment';
-import { Injectable, signal } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Auth, user } from '@angular/fire/auth';
 import { Firestore } from '@angular/fire/firestore';
 import { getAuth } from 'firebase/auth';
 import {
   addDoc,
-  doc,
   getFirestore,
   where,
   getDocs,
   collection,
   query,
-  getDoc,
   updateDoc,
 } from 'firebase/firestore';
 
@@ -26,19 +24,15 @@ import {
 })
 export class ProductoService {
   private ApiUrl: string = apiServer.serverUrl;
-  /*------ */
   private totalSubject = new BehaviorSubject<number>(0);
   total$ = this.totalSubject.asObservable();
-  /*------- */
   constructor(
     private http: HttpClient,
     private firebaseAuth: Auth,
     private firestore: Firestore,
     private toastr: ToastrService
   ) {
-    /*-------- */
     this.actualizarTotal();
-    /*-------- */
   }
   getProducto(): Observable<Producto[]> {
     return this.http.get<Producto[]>(`${this.ApiUrl}`);
@@ -97,7 +91,6 @@ export class ProductoService {
         const doc = querySnapshot.docs[0];
         const currentProducts = doc.data()['productsUser'] || [];
         const updatedProducts = [...currentProducts, product];
-
         await updateDoc(doc.ref, { productsUser: updatedProducts });
       } else {
         await addDoc(cartCollectionRef, { mail, productsUser: [product] });
@@ -165,7 +158,7 @@ export class ProductoService {
               data['productsUser'].forEach((product: any) => {
                 precio += product.price;
               });
-              this.actualizarTotal()
+              this.actualizarTotal();
             }
           });
           resolve(precio);
@@ -173,7 +166,7 @@ export class ProductoService {
       });
     });
   }
-  /*-------- */
+ 
   async actualizarTotal() {
     try {
       const total = await this.obtenertotal();
@@ -182,5 +175,5 @@ export class ProductoService {
       console.error('Error al actualizar el total:', error);
     }
   }
-  /*--------- */
+ 
 }
