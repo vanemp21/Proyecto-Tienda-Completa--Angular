@@ -24,10 +24,8 @@ import {
 } from 'firebase/firestore';
 import { ToastrService } from 'ngx-toastr';
 import { Login } from '../models/login.model';
-
 import { initializeApp } from 'firebase/app';
 import { environment } from '../../environments/environment';
-import { Router } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Usuario } from '../models/user.model';
 
@@ -39,7 +37,6 @@ export class RegisterService {
     private firebaseAuth: Auth,
     private firestore: Firestore,
     private toastr: ToastrService,
-    private router: Router
   ) {
     this.checkAuthState();
     this.initAuthListener();
