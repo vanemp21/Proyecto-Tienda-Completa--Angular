@@ -1,17 +1,7 @@
 .register-on{
     font-size: 2rem;
 }
-button:disabled{
-    cursor:not-allowed;
-    background-color: theme('colors.disabled')
-}
-button:disabled:hover{
-    cursor:not-allowed;
-    background-color: theme('colors.disabled')
-}
-button:hover{
-    background-color: theme('colors.hover')
-}
+
 .logout{
     position: absolute;
     top:45px;

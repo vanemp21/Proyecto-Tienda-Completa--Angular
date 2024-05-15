@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { Producto } from '../../../models/producto.model';
 import { CommonModule } from '@angular/common';
-import { Router, RouterLink } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { ProductoService } from '../../../services/product.service';
 
 @Component({

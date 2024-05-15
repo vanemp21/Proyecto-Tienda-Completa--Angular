@@ -5,8 +5,7 @@ import { ProductlistComponent } from '../cart/productlist/productlist.component'
   selector: 'app-home',
   standalone: true,
   imports: [ProductlistComponent],
-  templateUrl: './home.component.html',
-  styleUrl: './home.component.css'
+  templateUrl: './home.component.html'
 })
 export class HomeComponent {
 

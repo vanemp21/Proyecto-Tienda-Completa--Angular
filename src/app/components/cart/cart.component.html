@@ -119,6 +119,7 @@
           <span class="title-font font-medium text-2xl text-white"
             >${{ producto?.price }}</span
           >
+          <div *ngIf="islogged">
           <button
             class="flex ml-auto text-white bg-primary border-0 py-2 px-6 focus:outline-none hover:bg-pink-600 rounded"
             (click)="
@@ -132,6 +133,7 @@
           >
             Añadir
           </button>
+        </div>
         </div>
       </div>
     </div>

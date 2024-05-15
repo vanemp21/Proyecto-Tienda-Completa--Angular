@@ -10,18 +10,6 @@ h1{
     color:white;
     font-size:20px;
 }
-button {
-  background-color: theme("colors.primary");
-}
-button:disabled {
-  cursor: not-allowed;
-  background-color: theme("colors.disabled");
-}
-button:disabled:hover {
-  cursor: not-allowed;
-  background-color: theme("colors.disabled");
-}
-button:hover,
 a:hover {
   background-color: theme("colors.hover");
 }

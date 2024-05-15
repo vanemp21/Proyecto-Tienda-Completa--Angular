@@ -7,8 +7,7 @@ import { CommonModule } from '@angular/common';
   selector: 'app-header',
   standalone: true,
   imports: [RouterLink, CommonModule],
-  templateUrl: './header.component.html',
-  styleUrl: './header.component.css',
+  templateUrl: './header.component.html'
 })
 
 export class HeaderComponent implements OnInit {

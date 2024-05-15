@@ -1,12 +1,4 @@
-button:disabled{
-    cursor:not-allowed;
-    background-color: theme('colors.disabled')
-}
-button:disabled:hover{
-    cursor:not-allowed;
-    background-color: theme('colors.disabled')
-}
-button:hover, a:hover{
+a:hover{
     background-color: theme('colors.hover')
 }
 a{

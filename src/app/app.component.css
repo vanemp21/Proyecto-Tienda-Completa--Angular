@@ -2,7 +2,6 @@ router-outlet{
     display: flex;
     flex:1;
 }
-
 .email{
     color:white;
     font-size:36px;

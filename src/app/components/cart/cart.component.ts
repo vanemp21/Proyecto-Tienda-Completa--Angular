@@ -6,6 +6,7 @@ import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
 import { Producto } from '../../models/producto.model';
 import { ToastrService } from 'ngx-toastr';
+import { RegisterService } from '../../services/register.service';
 
 @Component({
   selector: 'app-cart',
@@ -20,11 +21,14 @@ export class CartComponent  implements OnInit, OnDestroy{
   productoSub: Subscription | undefined;
 renderGalery: Boolean=true;
   galeria: Array<any> = [];
+  islogged:boolean=false
+ 
   constructor(
     private route: ActivatedRoute,
     private productService: ProductoService,
     private sanitizer: DomSanitizer,
     private toastr: ToastrService,
+    private register:RegisterService
   ) {}
  
   getStarRating(rate: number) {
@@ -51,6 +55,9 @@ renderGalery: Boolean=true;
       error: (err: any) => {
         console.error('Error', err);
       },
+    });
+    this.register.isLogged$.subscribe(isLogged => {
+      this.islogged = isLogged; 
     });
   }
   ngOnDestroy(): void {
